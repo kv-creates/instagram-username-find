@@ -52,3 +52,20 @@ if found:
     with open("available.txt", "a") as f:
         f.write("\n".join(found) + "\n")
 print(f"Checked up to index {i}, found {len(found)} this run")
+if __name__ == "__main__":
+    checker = InstagramChecker()
+    
+    # Read usernames from the environment variable set by GitHub Actions
+    # If not set (e.g., running locally), use a default list
+    usernames_input = os.getenv('USERNAMES_INPUT', 'instagram, cristiano, free_username_test_123')
+    usernames_to_check = [name.strip() for name in usernames_input.split(',') if name.strip()]
+    
+    print(f"--- Checking {len(usernames_to_check)} usernames ---")
+    for name in usernames_to_check:
+        status = checker.is_available(name)
+        if status is True:
+            print(f"✅ {name}: AVAILABLE")
+        elif status is False:
+            print(f"⛔ {name}: TAKEN")
+        else:
+            print(f"❓ {name}: ERROR")
